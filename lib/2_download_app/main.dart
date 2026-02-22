@@ -18,16 +18,33 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int _currentIndex = 1;
+  final ThemeColorProvider _themeColorProvider = ThemeColorProvider();
 
-  final List<Widget> _pages =  [DownloadsScreen(), SettingsScreen()];
+  @override
+  void initState() {
+    super.initState();
+    _themeColorProvider.addListener((){   //rebuild when theme changes
+      setState(() {
+      });
+    });
+  }
+
+  @override
+  void dispose(){
+    _themeColorProvider.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final theme = _themeColorProvider.currentThemeColor;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: appTheme,
       home: Scaffold(
-        body: _pages[_currentIndex],
+        body: _currentIndex == 0
+            ? DownloadsScreen(themeColor:theme)
+            : SettingsScreen(themeColorProvider: _themeColorProvider),
 
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
@@ -36,7 +53,7 @@ class _MyAppState extends State<MyApp> {
               _currentIndex = index;
             });
           },
-          selectedItemColor: currentThemeColor.color,
+          selectedItemColor: theme.color,
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Downloads'),
             BottomNavigationBarItem(

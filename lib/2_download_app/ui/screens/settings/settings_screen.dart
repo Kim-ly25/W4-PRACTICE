@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../providers/theme_color_provider.dart';
@@ -6,10 +5,12 @@ import '../../theme/theme.dart';
 import 'widget/theme_color_button.dart';
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
- 
+  const SettingsScreen({super.key, required this.themeColorProvider});
+  final ThemeColorProvider themeColorProvider;
+
   @override
   Widget build(BuildContext context) {
+    final currentThemeColor = themeColorProvider.currentThemeColor;
     return Container(
       color: currentThemeColor.backgroundColor,
       child: Column(
@@ -39,7 +40,9 @@ class SettingsScreen extends StatelessWidget {
                   (theme) => ThemeColorButton(
                     themeColor: theme,
                     isSelected: theme == currentThemeColor,
-                    onTap: (value) { },
+                    onTap: (value) {
+                      themeColorProvider.setThemeColor(value); //triggers rebuild
+                    },
                   ),
                 )
                 .toList(),
@@ -49,4 +52,3 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 }
- 
